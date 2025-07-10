@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foreigner Learning Hub</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #3b82f6; color: white; padding: 20px; text-align: center; }
+    nav { background: #2563eb; display: flex; flex-wrap: wrap; justify-content: center; }
+    nav a { color: white; padding: 10px 15px; text-decoration: none; font-weight: bold; }
+    nav a:hover { background: #1e40af; }
+    section { padding: 20px; border-bottom: 1px solid #ddd; display: none; }
+    h2 { color: #1e3a8a; }
+    iframe { width: 100%; max-width: 560px; height: 315px; margin: 10px 0; }
+    footer { text-align: center; padding: 15px; background: #e5e7eb; font-size: 14px; }
+    .auth { padding: 20px; max-width: 400px; margin: auto; }
+    .hidden { display: none; }
+    .loading { text-align: center; padding: 50px; font-size: 20px; display: none; }
+    .profile { background: #dbeafe; padding: 10px; margin: 20px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">Loading...</div>
+  <div class="auth" id="auth-section">
+    <h2>Login or Register</h2>
+    <input type="email" id="email" placeholder="Email" /><br><br>
+    <input type="password" id="password" placeholder="Password" /><br><br>
+    <label><input type="checkbox" id="remember"> Remember Me</label><br><br>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+    <p id="auth-msg"></p>
+  </div>  <div id="main-content" class="hidden">
+    <header>
+      <h1>📘 Foreigner Learning Hub</h1>
+      <p>Welcome, <span id="user-email"></span>!</p>
+      <button onclick="logout()">Logout</button>
+    </header><nav>
+  <a href="#" onclick="showSection('physics')">Physics</a>
+  <a href="#" onclick="showSection('chemistry')">Chemistry</a>
+  <a href="#" onclick="showSection('biology')">Biology</a>
+  <a href="#" onclick="showSection('english')">English</a>
+  <a href="#" onclick="showSection('history')">History</a>
+  <a href="#" onclick="showSection('politics')">Politics</a>
+  <a href="#" onclick="showSection('art')">Art</a>
+  <a href="#" onclick="showSection('science')">Science</a>
+</nav>
+
+<section id="physics">
+  <h2>🔬 Physics</h2>
+  <iframe src="https://www.youtube.com/embed/4a0FbQdH3dY"></iframe>
+  <a href="https://drive.google.com/your_physics_book_link" target="_blank">📥 Download Physics Book</a>
+</section>
+
+<section id="chemistry">
+  <h2>🧪 Chemistry</h2>
+  <iframe src="https://www.youtube.com/embed/FSyAehMdpyI"></iframe>
+  <a href="https://drive.google.com/your_chemistry_book_link" target="_blank">📥 Download Chemistry Book</a>
+</section>
+
+<section id="biology">
+  <h2>🧬 Biology</h2>
+  <iframe src="https://www.youtube.com/embed/UXsSBiK3yIQ"></iframe>
+  <a href="https://drive.google.com/your_biology_book_link" target="_blank">📥 Download Biology Book</a>
+</section>
+
+<section id="english">
+  <h2>📖 English</h2>
+  <iframe src="https://www.youtube.com/embed/N3K3sMELU4A"></iframe>
+  <a href="https://drive.google.com/your_english_book_link" target="_blank">📥 Download English Book</a>
+</section>
+
+<section id="history">
+  <h2>🏛️ History</h2>
+  <iframe src="https://www.youtube.com/embed/od3cM9R4BYk"></iframe>
+  <a href="https://drive.google.com/your_history_book_link" target="_blank">📥 Download History Book</a>
+</section>
+
+<section id="politics">
+  <h2>🗳️ Political Science</h2>
+  <iframe src="https://www.youtube.com/embed/bkDwDwHZ-_4"></iframe>
+  <a href="https://drive.google.com/your_politics_book_link" target="_blank">📥 Download Political Science Book</a>
+</section>
+
+<section id="art">
+  <h2>🎨 Art</h2>
+  <iframe src="https://www.youtube.com/embed/T5fPqMmpxUo"></iframe>
+  <a href="https://drive.google.com/your_art_book_link" target="_blank">📥 Download Art Book</a>
+</section>
+
+<section id="science">
+  <h2>🔬 General Science</h2>
+  <iframe src="https://www.youtube.com/embed/V1Pl8CzNzCw"></iframe>
+  <a href="https://drive.google.com/your_science_book_link" target="_blank">📥 Download Science Book</a>
+</section>
+
+<footer>
+  &copy; 2025 Foreigner Learning Hub. All rights reserved.
+</footer>
+
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQwqFD0Ny7D0kJuiPFwB0KpsHQZFmEjjE",
+      authDomain: "foreigner-learning-hub.firebaseapp.com",
+      projectId: "foreigner-learning-hub",
+      storageBucket: "foreigner-learning-hub.firebasestorage.app",
+      messagingSenderId: "59269412875",
+      appId: "1:59269412875:web:e7cd67b95405afef2c2f0e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loading = document.getElementById("loading");
+    const authSection = document.getElementById("auth-section");
+    const mainContent = document.getElementById("main-content");
+    const userEmail = document.getElementById("user-email");
+    const authMsg = document.getElementById("auth-msg");
+
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+      document.getElementById(id).style.display = "block";
+    }
+
+    window.login = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const remember = document.getElementById("remember").checked;
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (remember) localStorage.setItem("remember", email);
+        else localStorage.removeItem("remember");
+      } catch (e) {
+        authMsg.textContent = "Login failed: " + e.message;
+      }
+    }
+
+    window.register = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        authMsg.textContent = "Registration successful! Now login.";
+      } catch (e) {
+        authMsg.textContent = "Register failed: " + e.message;
+      }
+    }
+
+    window.logout = async function () {
+      await signOut(auth);
+    }
+
+    onAuthStateChanged(auth, user => {
+      loading.style.display = "none";
+      if (user) {
+        userEmail.textContent = user.email;
+        authSection.classList.add("hidden");
+        mainContent.classList.remove("hidden");
+        alert("🎉 Welcome " + user.email);
+      } else {
+        authSection.classList.remove("hidden");
+        mainContent.classList.add("hidden");
+      }
+    });
+  </script></body>
+</html>
